@@ -1,0 +1,9 @@
+\section{Introduction}
+
+Vector and raster representations are two widely adopted ways to describe an image. A~vector graphics image is defined by a collection of geometric primitives, whereas a raster image consists of samples taken on a regular grid. Currently dominant real-time graphics rendering paradigm processes both representations. Achieving immersive performance and visual quality relies on a proper combination of these techniques.
+
+In order to be displayed on a monitor device, a vector image description must eventually be rasterized. Performing that operation every time an end image, or a frame, is produced ensures visual results that are true to the original under any camera transformation. But some circumstances make it preferred to do the rasterization in advance and then use it in a form of a texture. Without special care, this causes precise geometric boundaries to be lost and may reveal significant artifacts when such texture is magnified.
+
+Prerasterization may be used, to save memory bandwidth or reduce computational load of animations. This can be applied to rendering of big sets of complicated objects, such as text or foliage. The technique is also a requirement for effects relying on efficient random acces to the image samples, such as texture-mapped decals.
+
+Rasterization of a vector graphics image can be wider understood as any kind of value grid encoding the original image. It may require some additional processing to produce the actually displayable array of colors, if it is not already one. A simple bitmap distinguishing pixels that are inside and outside of a geometrical shape, or a coverage-based anti-aliased image, suffer from boundary irregularities and blurring under magnification.
