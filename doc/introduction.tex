@@ -4,6 +4,28 @@ Vector and raster representations are two widely adopted ways to describe an ima
 
 In order to be displayed on a monitor device, a vector image description must eventually be rasterized. Performing that operation every time an end image, or a frame, is produced ensures visual results that are true to the original under any camera transformation. But some circumstances make it preferred to do the rasterization in advance and then use it in a form of a texture. Without special care, this causes precise geometric boundaries to be lost and may reveal significant artifacts when such texture is magnified.
 
-Prerasterization may be used, to save memory bandwidth or reduce computational load of animations. This can be applied to rendering of big sets of complicated objects, such as text or foliage. The technique is also a requirement for effects relying on efficient random acces to the image samples, such as texture-mapped decals.
+Prerasterization may be used to save memory bandwidth or reduce computational load of animations. This can be applied to rendering of big sets of complicated objects, such as text or foliage. The technique is also a requirement for effects relying on efficient random acces to the image samples, such as texture-mapped decals.
 
-Rasterization of a vector graphics image can be wider understood as any kind of value grid encoding the original image. It may require some additional processing to produce the actually displayable array of colors, if it is not already one. A simple bitmap distinguishing pixels that are inside and outside of a geometrical shape, or a coverage-based anti-aliased image, suffer from boundary irregularities and blurring under magnification.
+\subsection{Related work}
+
+A simple bitmap distinguishing pixels that are inside and outside of a geometrical shape, or a coverage-based anti-aliased image, suffer from boundary irregularities and blurring under magnification. To overcome these issues, various techniques have been proposed that encode auxiliary information into the texture pixels. Additional processing is then applied do reconstruct the directly displayable array of colors.
+
+One can, for example, store information about the geometry contained in a given texture pixel. In 2004, Sen \cite{sen04} and Tumblin et al. \cite{tumblin04} introduced an augmentation to the texture data that guides interpolation of adjecent texels to preserve sharp edges in a controllable fashion. Nehab et al., 2008, \cite{nehab08} encode the whole geometry overlapping a grid cell with unbounded complexity. This is achieved by using an indirection scheme to store variable length instruction stream decoded by a fragment shader.
+
+Converting a vector shape into a signed distance field (SDF) is a useful alternative approach. Thresholding the distance function at 0 reveals the shape boundary and choosing a different threshold value can be used to retrieve offset curves and apply special effects. Qin et al., 2006, \cite{qin06} compute the exact distance of a render sample to input geometry. An accelerating structure based on Voronoi partition is stored in a texture to ensure only a minimal set of features is considered per sample. 
+
+A naive grid of distance function samples prooves to be well suited for many practical applications in real-time rendering systems. In an article from 2007 \cite{green07}, Green explores the capabilities of such approach. Sampled distance fields offer unchallenged simplicity and render-time performance. Resulting image sample is produced by the sole means of thresholding a distance value interpolated between input texels, which is a basic operation already built into graphics hardware of all levels.
+
+In comparison to previously mentioned methods that aim at accuracy, this simple technique suffers from significant loss of quality at sharp features, which get rounded off. A possible solution using multiple overlapping shapes has been suggested in the paper \cite{green07} and further developed by Patai, 2014 \cite{patai14}, and Chlumský, 2015 \cite{chlumsky15}.
+
+In this thesis, we present a simple and fast method to generate approximated signed distance field textures from given geometry.
+
+\subsection{Common approaches}
+
+Preparing an SDF texture map is usually regarded as a preproduction step. Working in a resource-rich environment and with render-time quality as an objective, the available methods don't necessarily aim at efficient use of memory or parallelization. Another important factor is simplicity of implementation---a solution that is easy to implement is also easier to integrate than one requiring external dependency. This characteristic is often traded for speed. Common approaches can be divided into two categories.
+
+One idea is to compute the distance function directly from the geometry. This is the most natural approach and ensures most accurate results. However, it requires sophisticated accelerating datastructures in order to avoid checking every grid cell against every boundary segment. Also, a complication arises for tracking what parts of the surface are inside and outside of the shape, if self intersections are involved.
+
+One idea is to compute the distance function from an ordinary rasterization.
+
+Other methods compute the result directly from the geometry. This is the most natural approach, but 
