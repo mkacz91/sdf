@@ -13,7 +13,13 @@ First we find the value of $c(\phi, d)$ for $0 \leq \phi \leq \tquarterpi$ and $
     c(\phi, -d) = 1 - c(\phi, d).
 \end{gather}
 
-For a given angle Figure xx depicts the maximal distance $d_0$ beyond which the pixel stays completely outside. Distance $d_1$ is the point at which the border passes the first corner of the pixel square. The coverage value $c_1 = c(\phi, d_1)$ is equal to the area of the single hatched triangle. Simple geometric inspection gives
+\begin{figure}
+	\includegraphics[width=8cm]{img/coverage-formula.png}
+    \label{img:coverage-formula}
+    \caption{Obtaining coverage induced by line}
+\end{figure}
+
+For a given angle Figure \ref{img:coverage-formula} depicts the maximal distance $d_0$ beyond which the pixel stays completely outside. Distance $d_1$ is the point at which the border passes the first corner of the pixel square. The coverage value $c_1 = c(\phi, d_1)$ is equal to the area of the single hatched triangle. Simple geometric inspection gives
 \begin{equation}\begin{split}
 	d_0 &= \tfrac{\sqrt{2}}{2}\cos(\tquarterpi - \phi), \\
     d_1 &= \tfrac{\sqrt{2}}{2}\cos(\tquarterpi + \phi), \\[3pt]
